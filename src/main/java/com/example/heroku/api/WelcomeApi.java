@@ -2,11 +2,7 @@ package com.example.heroku.api;
 
 import com.example.heroku.service.FileIOService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -57,15 +53,19 @@ public class WelcomeApi
     @PostMapping("/regurgitate")
     public ResponseEntity<Resource> loadFile(@RequestParam("file") MultipartFile payload)
     {
+
         Resource resource = payload.getResource();
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @PostMapping("/excel")
-    public ResponseEntity<List<Map<String, Object>>> loadExcel(@RequestParam("file") MultipartFile payload) throws Exception {
+    public ResponseEntity<List<Object>> loadExcel(
+            @RequestParam("file") MultipartFile payload,
+            @RequestParam("sheetName") String sheetName
+    ) throws Exception {
 
 
-        List<Map<String, Object>> ret = fileIOService.parseExcelFile(payload);
+        List<Object> ret = fileIOService.parseExcelFile(payload, sheetName);
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 }
